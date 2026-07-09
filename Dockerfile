@@ -1,6 +1,6 @@
 FROM python:3-slim
 
-LABEL maintainer="rayingecho@gmail.com"
+LABEL maintainer="danqing.jfl@gmail.com"
 
 WORKDIR /usr/src/app
 

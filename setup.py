@@ -7,7 +7,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='aliyun-exporter',
-    version='0.3.1',
+    version='0.4.0',
     description='Alibaba Cloud CloudMonitor Prometheus exporter',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -30,17 +30,17 @@ setup(
     package_data={'aliyun_exporter': ['static/*','templates/*']},
     install_requires=[
         'prometheus-client',
-        'aliyun-python-sdk-cms==6.0.13',
-        'aliyun-python-sdk-core-v3==2.13.3',
         'pyyaml',
-        'ratelimiter',
         'flask',
         'cachetools',
-        'aliyun-python-sdk-ecs==4.16.5',
-        'aliyun-python-sdk-rds==2.3.2',
-        'aliyun-python-sdk-r-kvstore==2.0.5',
-        'aliyun-python-sdk-slb==3.2.8',
-        "aliyun-python-sdk-dds==2.0.4",
+        'alibabacloud_credentials',
+        'alibabacloud_tea_openapi',
+        'alibabacloud_cms20190101',
+        'alibabacloud_ecs20140526',
+        'alibabacloud_rds20140815',
+        'alibabacloud_r_kvstore20150101',
+        'alibabacloud_slb20140515',
+        'alibabacloud_dds20151201',
     ],
     entry_points={
         'console_scripts': [

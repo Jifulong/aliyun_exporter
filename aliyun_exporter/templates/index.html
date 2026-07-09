@@ -10,7 +10,7 @@
         </tr>
     {% for project in projects %}
         <tr>
-            <td><a href="/projects/{{ project['Project'] }}">{{ project['Project'] }}</a></td>
+            <td><a href="/projects/{{ project['Namespace'] }}">{{ project['Namespace'] }}</a></td>
             <td>{{ project['Description'] }}</td>
             <td>{{ project['Labels'] }}</td>
         </tr>

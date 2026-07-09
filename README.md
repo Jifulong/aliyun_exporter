@@ -102,13 +102,25 @@ docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml
 
 ## Configuration
 
+`aliyun-exporter` uses the Alibaba Cloud SDK v2 and supports three ways to authenticate:
+
+1. **AccessKey** (as before): set `credential.access_key_id` / `credential.access_key_secret` in the config file, or the `ALIYUN_ACCESS_ID` / `ALIYUN_ACCESS_SECRET` env vars.
+2. **RRSA** (RAM Roles for Service Accounts, for pods running in ACK): omit `access_key_id`/`access_key_secret` entirely. If the pod's ServiceAccount has RRSA enabled, ACK injects the `ALIBABA_CLOUD_ROLE_ARN` / `ALIBABA_CLOUD_OIDC_PROVIDER_ARN` / `ALIBABA_CLOUD_OIDC_TOKEN_FILE` env vars automatically, and the exporter will pick them up without any extra configuration.
+3. **Explicit RRSA config**: set `credential.type: oidc_role_arn` with `role_arn` / `oidc_provider_arn` / `oidc_token_file_path` (and optionally `role_session_name`) if you need to configure RRSA outside of the ACK auto-injection.
+4. Any other credential type supported by the default Alibaba Cloud credential chain (e.g. ECS RAM role) also works automatically when `credential.access_key_id`/`access_key_secret` are omitted.
+
 ```yaml
 rate_limit: 5 # request rate limit per second. default: 10
 credential:
-  access_key_id: <YOUR_ACCESS_KEY_ID> # required
-  access_key_secret: <YOUR_ACCESS_KEY_SECRET> # required
+  access_key_id: <YOUR_ACCESS_KEY_ID> # optional, omit to use RRSA/ECS RAM role/etc.
+  access_key_secret: <YOUR_ACCESS_KEY_SECRET> # optional, must be set together with access_key_id
   region_id: <REGION_ID> # default: 'cn-hangzhou'
-  
+  # RRSA (optional, only needed outside of ACK's automatic env var injection):
+  # type: oidc_role_arn
+  # role_arn: <ROLE_ARN>
+  # oidc_provider_arn: <OIDC_PROVIDER_ARN>
+  # oidc_token_file_path: <OIDC_TOKEN_FILE_PATH>
+
 metrics: # required, metrics specifications
   acs_cdn: # required, Project Name of CloudMonitor
   - name: QPS # required, Metric Name of CloudMonitor, belongs to a certain Project
@@ -205,4 +217,8 @@ Feel free to open issues and pull requests, any feedback will be highly apprecia
 Please check the [`help wanted`](https://github.com/aylei/aliyun-exporter/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) label to find issues that are good for getting started.
 
 Besides, contributing to new [alert rules](./docker-compose/prometheus/rules.yml), new [dashboards](./docker-compose/grafana/dashboards) is also welcomed!
+
+## Credits
+
+This project is forked from [aylei/aliyun-exporter](https://github.com/aylei/aliyun-exporter). Many thanks to the original author and contributors for the great work.
 

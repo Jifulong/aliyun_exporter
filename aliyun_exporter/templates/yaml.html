@@ -3,7 +3,7 @@
 metrics:
   {{ project }}:
 {%- for metric in metrics %}
-  - name: {{ metric['Metric'] | formatmetric }}
+  - name: {{ metric['MetricName'] | formatmetric }}
     period: {{ metric['Periods'] | formatperiod}}
 {%- endfor -%}
 </pre>
