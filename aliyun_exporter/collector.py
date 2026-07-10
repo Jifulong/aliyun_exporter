@@ -100,8 +100,10 @@ class AliyunCollector(object):
             points = json.loads(data['Datapoints'])
             return points
         else:
-            logging.error('Error query metrics for {}_{}, the response body don not have Datapoints field, please check you permission or workload' .format(project, metric))
-            return points
+            logging.error(
+                'Error query metrics for {}_{}, the response body does not have a Datapoints field, '
+                'please check your permission or workload. Response: {}'.format(project, metric, data))
+            return []
 
     def parse_label_keys(self, point):
         return [k for k in point if k not in ['timestamp', 'Maximum', 'Minimum', 'Average']]
