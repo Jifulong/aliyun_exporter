@@ -70,7 +70,7 @@ metrics:
 ## Docker 镜像
 
 ```bash
-docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml danqingji/aliyun-exporter:v1 -c $(pwd)/aliyun-exporter.yml
+docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml danqingji/aliyun-exporter:v1.1 -c $(pwd)/aliyun-exporter.yml
 ```
 
 ## Grafana 看板

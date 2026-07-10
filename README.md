@@ -92,12 +92,12 @@ Visit metrics in [localhost:9525/metrics](http://localhost:9525/metrics)
 
 Install
 ```bash
-docker pull danqingji/aliyun-exporter:v1
+docker pull danqingji/aliyun-exporter:v1.1
 ```
 
 To run the container, external configuration file is required:
 ```bash
-docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml danqingji/aliyun-exporter:v1 -c $(pwd)/aliyun-exporter.yml
+docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml danqingji/aliyun-exporter:v1.1 -c $(pwd)/aliyun-exporter.yml
 ```
 
 ## Configuration
