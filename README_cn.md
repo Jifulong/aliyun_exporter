@@ -70,7 +70,7 @@ metrics:
 ## Docker 镜像
 
 ```bash
-docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml aylei/aliyun-exporter:0.3.0 -c $(pwd)/aliyun-exporter.yml
+docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml danqingji/aliyun-exporter:v1 -c $(pwd)/aliyun-exporter.yml
 ```
 
 ## Grafana 看板
@@ -104,6 +104,9 @@ metrics: # 必填, 目标指标配置
     rename: qps # 选填，定义对应的 Prometheus 指标名字，默认与云监控指标名字一致
     period: 60 # 选填，默认 60
     measure: Average # 选填，响应体中的指标值字段名，默认 'Average'
+  acs_global_acceleration:
+  - name: [GaBaseGaIpInBps, GaBaseGaIpOutBps, GaBaseGaIpInPps] # name 也支持写成列表，一次性给多个指标复用同一份 period/measure 配置，但不能和 rename 一起用
+    period: 60
 ```
 
 提示：

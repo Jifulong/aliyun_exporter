@@ -92,12 +92,12 @@ Visit metrics in [localhost:9525/metrics](http://localhost:9525/metrics)
 
 Install
 ```bash
-docker pull aylei/aliyun-exporter:0.3.1
+docker pull danqingji/aliyun-exporter:v1
 ```
 
 To run the container, external configuration file is required:
 ```bash
-docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml aylei/aliyun-exporter:0.3.1 -c $(pwd)/aliyun-exporter.yml
+docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml danqingji/aliyun-exporter:v1 -c $(pwd)/aliyun-exporter.yml
 ```
 
 ## Configuration
@@ -127,6 +127,9 @@ metrics: # required, metrics specifications
     rename: qps # rename the related prometheus metric. default: same as the 'name'
     period: 60 # query period. default: 60
     measure: Average # measure field in the response. default: Average
+  acs_global_acceleration:
+  - name: [GaBaseGaIpInBps, GaBaseGaIpOutBps, GaBaseGaIpInPps] # `name` also accepts a list to apply the same period/measure to several metrics at once. Cannot be combined with `rename`.
+    period: 60
 
 info_metrics:
   - ecs

@@ -13,7 +13,7 @@ from aliyun_exporter.clients import AliyunClients
 from aliyun_exporter.credential import build_credential_client, build_openapi_config
 from aliyun_exporter.info_provider import InfoProvider
 from aliyun_exporter.ratelimit import RateLimiter
-from aliyun_exporter.utils import try_or_else
+from aliyun_exporter.utils import try_or_else, expand_metric_names
 
 rds_performance = 'rds_performance'
 special_projects = {
@@ -35,7 +35,7 @@ class CollectorConfig(object):
         # raise Exception('Metrics config must be set.')
 
         self.credential = credential
-        self.metrics = metrics
+        self.metrics = expand_metric_names(metrics)
         self.rate_limit = rate_limit
         self.info_metrics = info_metrics
 
