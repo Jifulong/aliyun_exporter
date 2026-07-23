@@ -107,7 +107,8 @@ docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml
 1. **AccessKey** (as before): set `credential.access_key_id` / `credential.access_key_secret` in the config file, or the `ALIYUN_ACCESS_ID` / `ALIYUN_ACCESS_SECRET` env vars.
 2. **RRSA** (RAM Roles for Service Accounts, for pods running in ACK): omit `access_key_id`/`access_key_secret` entirely. If the pod's ServiceAccount has RRSA enabled, ACK injects the `ALIBABA_CLOUD_ROLE_ARN` / `ALIBABA_CLOUD_OIDC_PROVIDER_ARN` / `ALIBABA_CLOUD_OIDC_TOKEN_FILE` env vars automatically, and the exporter will pick them up without any extra configuration.
 3. **Explicit RRSA config**: set `credential.type: oidc_role_arn` with `role_arn` / `oidc_provider_arn` / `oidc_token_file_path` (and optionally `role_session_name`) if you need to configure RRSA outside of the ACK auto-injection.
-4. Any other credential type supported by the default Alibaba Cloud credential chain (e.g. ECS RAM role) also works automatically when `credential.access_key_id`/`access_key_secret` are omitted.
+4. **Cross-account RRSA**: if the resources you're monitoring live in a different Alibaba Cloud account than your ACK cluster, and that account's target role trusts your account's root/roles (rather than trusting your cluster's OIDC provider directly), add `assume_role_arn: <TARGET_ACCOUNT_ROLE_ARN>` alongside `type: oidc_role_arn`. The exporter first assumes `role_arn` (a role in the *same* account as the cluster, via OIDC) and then uses those credentials to assume `assume_role_arn` in the other account.
+5. Any other credential type supported by the default Alibaba Cloud credential chain (e.g. ECS RAM role) also works automatically when `credential.access_key_id`/`access_key_secret` are omitted.
 
 ```yaml
 rate_limit: 5 # request rate limit per second. default: 10
@@ -120,6 +121,7 @@ credential:
   # role_arn: <ROLE_ARN>
   # oidc_provider_arn: <OIDC_PROVIDER_ARN>
   # oidc_token_file_path: <OIDC_TOKEN_FILE_PATH>
+  # assume_role_arn: <TARGET_ACCOUNT_ROLE_ARN> # optional, for cross-account RRSA
 
 metrics: # required, metrics specifications
   acs_cdn: # required, Project Name of CloudMonitor

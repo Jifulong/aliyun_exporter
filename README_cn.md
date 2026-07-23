@@ -84,7 +84,8 @@ docker run -p 9525:9525 -v $(pwd)/aliyun-exporter.yml:$(pwd)/aliyun-exporter.yml
 1. **AccessKey**（与之前一致）：在配置文件中填写 `credential.access_key_id` / `credential.access_key_secret`，或者设置环境变量 `ALIYUN_ACCESS_ID` / `ALIYUN_ACCESS_SECRET`。
 2. **RRSA**（RAM Roles for Service Accounts，适用于运行在 ACK 上的 Pod）：不填 `access_key_id`/`access_key_secret` 即可。只要 Pod 绑定的 ServiceAccount 开启了 RRSA，ACK 会自动注入 `ALIBABA_CLOUD_ROLE_ARN` / `ALIBABA_CLOUD_OIDC_PROVIDER_ARN` / `ALIBABA_CLOUD_OIDC_TOKEN_FILE` 环境变量，exporter 会自动识别，无需额外配置。
 3. **显式配置 RRSA**：如果需要在非 ACK 自动注入的场景下配置 RRSA，可以设置 `credential.type: oidc_role_arn`，并填写 `role_arn` / `oidc_provider_arn` / `oidc_token_file_path`（可选 `role_session_name`）。
-4. 不填 `access_key_id`/`access_key_secret` 时，也会自动走阿里云默认凭证链支持的其它方式（如 ECS RAM Role）。
+4. **跨账号 RRSA**：如果要采集的资源在另一个阿里云账号下，且目标账号那边的角色信任策略信任的是"本账号 root/角色"而不是直接信任本集群的 OIDC provider，在 `type: oidc_role_arn` 的基础上再加一个 `assume_role_arn: <目标账号角色ARN>`。exporter 会先通过 OIDC 假设 `role_arn`（跟集群同账号的角色），再用这个角色的临时凭证去假设 `assume_role_arn`（另一个账号的角色）。
+5. 不填 `access_key_id`/`access_key_secret` 时，也会自动走阿里云默认凭证链支持的其它方式（如 ECS RAM Role）。
 
 ```yaml
 rate_limit: 5 # 限流配置，每秒请求次数. 默认值: 10
@@ -97,6 +98,7 @@ credential:
   # role_arn: <ROLE_ARN>
   # oidc_provider_arn: <OIDC_PROVIDER_ARN>
   # oidc_token_file_path: <OIDC_TOKEN_FILE_PATH>
+  # assume_role_arn: <目标账号角色ARN> # 选填，跨账号 RRSA 用
 
 metrics: # 必填, 目标指标配置
   acs_cdn: # 必填，云监控中定义的 Project 名字
