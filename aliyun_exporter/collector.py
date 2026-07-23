@@ -136,8 +136,18 @@ class AliyunCollector(object):
             return
         label_keys = self.parse_label_keys(points[0])
         gauge = GaugeMetricFamily(self.format_metric_name(project, name), '', labels=label_keys)
+        added = 0
         for point in points:
+            if measure not in point:
+                logging.error(
+                    'Error query metrics for {}_{}, point does not have "{}" field: {}'.format(
+                        project, metric_name, measure, point))
+                continue
             gauge.add_metric([try_or_else(lambda: str(point[k]), '') for k in label_keys], point[measure])
+            added += 1
+        if added < 1:
+            yield metric_up_gauge(self.format_metric_name(project, name), False)
+            return
         yield gauge
         yield metric_up_gauge(self.format_metric_name(project, name), True)
 
